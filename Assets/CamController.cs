@@ -24,7 +24,7 @@ public class CamController : MonoBehaviour
     }
     public void OnMove()
     {
-        Camera.transform.localPosition = startPos;
-        Camera.transform.LookAt(transform.position + new Vector3(0,3,0));
+        //Camera.transform.localPosition = startPos;
+        //Camera.transform.LookAt(transform.position + new Vector3(0,3,0));
     }
 }

@@ -37,6 +37,24 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""CamMoveRight"",
+                    ""type"": ""Value"",
+                    ""id"": ""138d4348-aafd-41a4-a980-0a0e1c84ff96"",
+                    ""expectedControlType"": ""Integer"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CamMoveLeft"",
+                    ""type"": ""Value"",
+                    ""id"": ""71549a6a-2233-4e39-81e7-01679d2a4e1a"",
+                    ""expectedControlType"": ""Integer"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Look"",
                     ""type"": ""Value"",
                     ""id"": ""2bd0a87e-202b-4894-a1ed-b1c256a2863b"",
@@ -304,6 +322,28 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3d3aca30-3f54-4762-87e3-2ae4c1828045"",
+                    ""path"": ""<Gamepad>/rightStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad;Joystick"",
+                    ""action"": ""CamMoveLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6ef5fcc9-cc34-424d-b53e-661a91a43e59"",
+                    ""path"": ""<Gamepad>/rightStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad;Joystick"",
+                    ""action"": ""CamMoveRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -940,6 +980,8 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_CamMoveRight = m_Player.FindAction("CamMoveRight", throwIfNotFound: true);
+        m_Player_CamMoveLeft = m_Player.FindAction("CamMoveLeft", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
@@ -1019,6 +1061,8 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_CamMoveRight;
+    private readonly InputAction m_Player_CamMoveLeft;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Jump;
@@ -1027,6 +1071,8 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
         private @GP_Project m_Wrapper;
         public PlayerActions(@GP_Project wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
+        public InputAction @CamMoveRight => m_Wrapper.m_Player_CamMoveRight;
+        public InputAction @CamMoveLeft => m_Wrapper.m_Player_CamMoveLeft;
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
@@ -1042,6 +1088,12 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
+                @CamMoveRight.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveRight;
+                @CamMoveRight.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveRight;
+                @CamMoveRight.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveRight;
+                @CamMoveLeft.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveLeft;
+                @CamMoveLeft.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveLeft;
+                @CamMoveLeft.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveLeft;
                 @Look.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
@@ -1058,6 +1110,12 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @CamMoveRight.started += instance.OnCamMoveRight;
+                @CamMoveRight.performed += instance.OnCamMoveRight;
+                @CamMoveRight.canceled += instance.OnCamMoveRight;
+                @CamMoveLeft.started += instance.OnCamMoveLeft;
+                @CamMoveLeft.performed += instance.OnCamMoveLeft;
+                @CamMoveLeft.canceled += instance.OnCamMoveLeft;
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
@@ -1265,6 +1323,8 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnCamMoveRight(InputAction.CallbackContext context);
+        void OnCamMoveLeft(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);

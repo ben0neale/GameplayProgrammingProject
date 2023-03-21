@@ -6,21 +6,25 @@ using UnityEngine.InputSystem;
 public class CamController : MonoBehaviour
 {
     Vector3 startPos;
-    [SerializeField] GameObject player;
+    [SerializeField] GameObject Camera;
+    public float camSpeed = 5f;
 
     // Start is called before the first frame update
     void Start()
     {
-        startPos = transform.localPosition;
+        startPos = Camera.transform.localPosition;
     }
-    public void OnCamMoveRight()
+    public void OnCamMoveRight(InputValue movement)
     {
-        print("CamMove");
-        transform.RotateAround(player.transform.position, Vector3.up, 1000f);
+        Camera.transform.RotateAround(transform.position, Vector3.up, 1f * camSpeed);
     }
-    public void OnCamMoveLeft()
+    public void OnCamMoveLeft(InputValue movement)
     {
-        print("Cam Move L");
-        transform.RotateAround(player.transform.position, Vector3.up, -1000f);
+        Camera.transform.RotateAround(transform.position, Vector3.up, -1f * camSpeed);
+    }
+    public void OnMove()
+    {
+        Camera.transform.localPosition = startPos;
+        Camera.transform.LookAt(transform.position + new Vector3(0,3,0));
     }
 }

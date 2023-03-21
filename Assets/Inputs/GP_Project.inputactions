@@ -15,6 +15,24 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "CamMoveRight",
+                    "type": "Value",
+                    "id": "138d4348-aafd-41a4-a980-0a0e1c84ff96",
+                    "expectedControlType": "Integer",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CamMoveLeft",
+                    "type": "Value",
+                    "id": "71549a6a-2233-4e39-81e7-01679d2a4e1a",
+                    "expectedControlType": "Integer",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Look",
                     "type": "Value",
                     "id": "2bd0a87e-202b-4894-a1ed-b1c256a2863b",
@@ -282,6 +300,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3d3aca30-3f54-4762-87e3-2ae4c1828045",
+                    "path": "<Gamepad>/rightStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad;Joystick",
+                    "action": "CamMoveLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6ef5fcc9-cc34-424d-b53e-661a91a43e59",
+                    "path": "<Gamepad>/rightStick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad;Joystick",
+                    "action": "CamMoveRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

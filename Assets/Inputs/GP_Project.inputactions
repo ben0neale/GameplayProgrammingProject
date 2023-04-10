@@ -15,10 +15,10 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "CamMoveRight",
+                    "name": "CamMove",
                     "type": "Value",
                     "id": "138d4348-aafd-41a4-a980-0a0e1c84ff96",
-                    "expectedControlType": "Integer",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -54,6 +54,15 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "ee8e4d72-ec31-4cf1-889e-3d230a27fa93",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "152938a4-cfe7-47ff-8313-9384db8f6896",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -317,11 +326,22 @@
                 {
                     "name": "",
                     "id": "6ef5fcc9-cc34-424d-b53e-661a91a43e59",
-                    "path": "<Gamepad>/rightStick/right",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad;Joystick",
-                    "action": "CamMoveRight",
+                    "action": "CamMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "008f4d54-b7e8-4ce9-9312-006ccfcd0535",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick;Gamepad",
+                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

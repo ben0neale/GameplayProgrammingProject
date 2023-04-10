@@ -6,6 +6,8 @@ TagManager:
   tags:
   - speed+
   - jump+
+  - button
+  - groundCollider
   layers:
   - Default
   - TransparentFX

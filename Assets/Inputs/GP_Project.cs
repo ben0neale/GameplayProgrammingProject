@@ -37,10 +37,10 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""CamMoveRight"",
+                    ""name"": ""CamMove"",
                     ""type"": ""Value"",
                     ""id"": ""138d4348-aafd-41a4-a980-0a0e1c84ff96"",
-                    ""expectedControlType"": ""Integer"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -76,6 +76,15 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""ee8e4d72-ec31-4cf1-889e-3d230a27fa93"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""152938a4-cfe7-47ff-8313-9384db8f6896"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -339,11 +348,22 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""6ef5fcc9-cc34-424d-b53e-661a91a43e59"",
-                    ""path"": ""<Gamepad>/rightStick/right"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad;Joystick"",
-                    ""action"": ""CamMoveRight"",
+                    ""action"": ""CamMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""008f4d54-b7e8-4ce9-9312-006ccfcd0535"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Joystick;Gamepad"",
+                    ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -980,11 +1000,12 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-        m_Player_CamMoveRight = m_Player.FindAction("CamMoveRight", throwIfNotFound: true);
+        m_Player_CamMove = m_Player.FindAction("CamMove", throwIfNotFound: true);
         m_Player_CamMoveLeft = m_Player.FindAction("CamMoveLeft", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1061,21 +1082,23 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
-    private readonly InputAction m_Player_CamMoveRight;
+    private readonly InputAction m_Player_CamMove;
     private readonly InputAction m_Player_CamMoveLeft;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_Attack;
     public struct PlayerActions
     {
         private @GP_Project m_Wrapper;
         public PlayerActions(@GP_Project wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
-        public InputAction @CamMoveRight => m_Wrapper.m_Player_CamMoveRight;
+        public InputAction @CamMove => m_Wrapper.m_Player_CamMove;
         public InputAction @CamMoveLeft => m_Wrapper.m_Player_CamMoveLeft;
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1088,9 +1111,9 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
-                @CamMoveRight.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveRight;
-                @CamMoveRight.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveRight;
-                @CamMoveRight.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveRight;
+                @CamMove.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMove;
+                @CamMove.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMove;
+                @CamMove.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMove;
                 @CamMoveLeft.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveLeft;
                 @CamMoveLeft.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveLeft;
                 @CamMoveLeft.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMoveLeft;
@@ -1103,6 +1126,9 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @Attack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                @Attack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                @Attack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1110,9 +1136,9 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @CamMoveRight.started += instance.OnCamMoveRight;
-                @CamMoveRight.performed += instance.OnCamMoveRight;
-                @CamMoveRight.canceled += instance.OnCamMoveRight;
+                @CamMove.started += instance.OnCamMove;
+                @CamMove.performed += instance.OnCamMove;
+                @CamMove.canceled += instance.OnCamMove;
                 @CamMoveLeft.started += instance.OnCamMoveLeft;
                 @CamMoveLeft.performed += instance.OnCamMoveLeft;
                 @CamMoveLeft.canceled += instance.OnCamMoveLeft;
@@ -1125,6 +1151,9 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
             }
         }
     }
@@ -1323,11 +1352,12 @@ public partial class @GP_Project : IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnCamMoveRight(InputAction.CallbackContext context);
+        void OnCamMove(InputAction.CallbackContext context);
         void OnCamMoveLeft(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

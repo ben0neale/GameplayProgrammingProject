@@ -19,6 +19,11 @@ public class PlayerController : MonoBehaviour
     bool doubleJump = false;
     float speedTimer = 10f;
     float jumpTimer = 10f;
+    float attackTime = .5f;
+    bool attacking = false;
+    bool buttonCollide = false;
+
+    public GameController controllerRef;
 
     // Start is called before the first frame update
     void Start()
@@ -28,24 +33,45 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputValue movementValue)
     {
-        Vector2 movementVector = movementValue.Get<Vector2>();
+        if (controllerRef.state == GameController.Gamestate.play)
+        {
+            Vector2 movementVector = movementValue.Get<Vector2>();
 
-        movementX = movementVector.x;
-        movementY = movementVector.y;
+            movementX = movementVector.x;
+            movementY = movementVector.y;
+        }
     }
 
     public void OnJump()
     {
-        if (grounded || doubleJump)
+        if (controllerRef.state == GameController.Gamestate.play)
         {
-            RB.AddForce(0, 600, 0);
-            anim.SetBool("Jump", true);
-            
-            if (!grounded)
+            if (grounded || doubleJump)
             {
-                doubleJump = false;
+                RB.AddForce(0, 600, 0);
+                anim.SetBool("Jump", true);
+
+                if (!grounded)
+                {
+                    doubleJump = false;
+                }
+                grounded = false;
             }
-            grounded = false;
+        }
+    }
+
+    public void OnAttack()
+    {
+        if (controllerRef.state == GameController.Gamestate.play)
+        {
+            anim.SetBool("ButtonPress", true);
+            attacking = true;
+            if (buttonCollide)
+            {
+                controllerRef.state = GameController.Gamestate.cutscene;
+                transform.position = new Vector3(3.5f, .5f, 20);
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
         }
     }
     void Powerup()
@@ -87,17 +113,32 @@ public class PlayerController : MonoBehaviour
             RB.AddRelativeForce(movement * speed);
         }
 
-        transform.Rotate(0, movementX * rotationSpeed, 0);
-        RB.AddForce(0, -1 * gravityScale, 0);
-        anim.SetFloat("Speed", movementY);
+        if (controllerRef.state == GameController.Gamestate.play)
+        {
+            transform.Rotate(0, movementX * rotationSpeed, 0);
+            RB.AddForce(0, -1 * gravityScale, 0);
+            anim.SetFloat("Speed", movementY);
+        }
+
+
+        if (attacking)
+        {
+            if (attackTime > 0)
+            {
+                attackTime -= Time.deltaTime;
+            }
+            else
+            {
+                attackTime = .5f;
+                attacking = false;
+                anim.SetBool("ButtonPress", false);
+            }
+        }
 
         Powerup();
     }
     private void OnCollisionEnter(Collision collision)
     {
-        anim.SetBool("Jump", false);
-        grounded = true;
-
         if (jumpPowerup)
             doubleJump = true;
        
@@ -112,6 +153,23 @@ public class PlayerController : MonoBehaviour
             Destroy(collision.gameObject);
             doubleJump = true;
             jumpPowerup = true;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "button")
+        {
+            buttonCollide = true;
+        }
+        anim.SetBool("Jump", false);
+        grounded = true;
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "button")
+        {
+            buttonCollide = false;
         }
     }
 }

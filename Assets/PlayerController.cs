@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     bool buttonCollide = false;
 
     public GameController controllerRef;
+    public GameObject respawnPoint;
 
     // Start is called before the first frame update
     void Start()
@@ -161,6 +162,10 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.tag == "button")
         {
             buttonCollide = true;
+        }
+        if (other.gameObject.tag == "respawn")
+        {
+            transform.position = respawnPoint.transform.position;
         }
         anim.SetBool("Jump", false);
         grounded = true;

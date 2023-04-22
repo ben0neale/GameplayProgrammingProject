@@ -8,6 +8,9 @@ TagManager:
   - jump+
   - button
   - groundCollider
+  - Collide
+  - barrel
+  - respawn
   layers:
   - Default
   - TransparentFX

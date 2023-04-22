@@ -43,4 +43,20 @@ public class PlatformController : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, transform.position - direction, speed);
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.transform.SetParent(transform);
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.transform.SetParent(null);
+        }
+    }
 }

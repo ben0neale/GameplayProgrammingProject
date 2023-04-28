@@ -26,7 +26,13 @@ public class PlayerController : MonoBehaviour
     public GameController controllerRef;
     public GameObject respawnPoint;
 
-    bool spline = false;
+    public bool spline = false;
+    public GameObject SplineObj;
+    bool trigger1 = false;
+    bool trigger2 = false;
+    bool forward1 = false;
+    bool forward2 = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -110,19 +116,44 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frameS
     void FixedUpdate()
     {
-        Vector3 movement = new Vector3(0, 0, movementY * speed);
-        if (RB.velocity.z < maxSpeed)
+        if (trigger1 && forward1)
         {
-            RB.AddRelativeForce(movement * speed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 45, 0), .2f);
+        }           
+        else if(trigger1)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 90, 0), .2f);
+        }
+        if (trigger2 && forward2)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), .2f);
+        }
+        else if (trigger2)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 45, 0), .2f);
         }
 
-        if (controllerRef.state == GameController.Gamestate.play)
-        {
-            transform.Rotate(0, movementX * rotationSpeed, 0);
-            RB.AddForce(0, -1 * gravityScale, 0);
-            anim.SetFloat("Speed", movementY);
-        }
 
+        if (!spline)
+        {
+            Vector3 movement = new Vector3(0, 0, movementY * speed);
+            if (RB.velocity.z < maxSpeed)
+            {
+                RB.AddRelativeForce(movement * speed);
+            }
+
+            if (controllerRef.state == GameController.Gamestate.play)
+            {
+                transform.Rotate(0, movementX * rotationSpeed, 0);
+                RB.AddForce(0, -1 * gravityScale, 0);
+                anim.SetFloat("Speed", movementY);
+            }
+        }
+        else
+        {
+            RB.AddRelativeForce(new Vector3(0, 0, movementX * speed * 10));
+            anim.SetFloat("Speed", movementX);
+        }
 
         if (attacking)
         {
@@ -157,6 +188,10 @@ public class PlayerController : MonoBehaviour
             doubleJump = true;
             jumpPowerup = true;
         }
+        if (collision.gameObject.tag == "Finish")
+        {
+            spline = false;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -172,6 +207,22 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.tag == "spline")
         {
             spline = true;
+            transform.position = SplineObj.transform.GetChild(0).position;
+            transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
+        if (other.gameObject.tag == "trigger1" && spline && !trigger1)
+        {
+            RB.velocity = new Vector3(0,0,0);
+            forward1 = !forward1;
+            trigger1 = true;
+            
+        }
+        if (other.gameObject.tag == "trigger2" && spline && !trigger2)
+        {
+            RB.velocity = new Vector3(0, 0, 0);
+            forward2 = !forward2;
+            trigger2 = true;
+            
         }
         anim.SetBool("Jump", false);
         grounded = true;
@@ -182,5 +233,9 @@ public class PlayerController : MonoBehaviour
         {
             buttonCollide = false;
         }
+        if (other.gameObject.tag == "trigger1" && spline)
+            trigger1 = false;
+        if (other.gameObject.tag == "trigger2" && spline)
+            trigger2 = false;
     }
 }

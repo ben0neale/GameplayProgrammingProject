@@ -12,6 +12,8 @@ TagManager:
   - barrel
   - respawn
   - spline
+  - trigger1
+  - trigger2
   layers:
   - Default
   - TransparentFX

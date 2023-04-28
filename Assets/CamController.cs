@@ -9,43 +9,46 @@ public class CamController : MonoBehaviour
     [SerializeField] GameObject Camera;
     public float camSpeed = 5f;
     float camDirection = 0;
-    bool spline = false;
+    PlayerController playerref;
 
     // Start is called before the first frame update
     void Start()
     {
         startPos = Camera.transform.localPosition;
+        playerref = GetComponent<PlayerController>();
+        startPos = Camera.transform.localPosition;
     }
 
-    public void OnCamMove(InputValue movement)
+    private void Update()
     {
-        if (!spline)
+        if (!playerref.spline)
         {
-            Vector2 movementVector = movement.Get<Vector2>();
-
-            if (movementVector.x > 0)
-            {
-                camDirection = 1;
-            }
-            else if (movementVector.x < 0)
-            {
-                camDirection = -1;
-            }
-
+            Camera.transform.localPosition = startPos;
             Camera.transform.RotateAround(transform.position, Vector3.up, 1f * camSpeed * camDirection);
+            Camera.transform.LookAt(transform.position);
         }
         else
         {
-            Camera.transform.position = new Vector3(0, 0, 10);
-            Camera.transform.rotation = Quaternion.Euler(0, 0, 0);
+            Camera.transform.localPosition = new Vector3(15, 1.25f, 0);
+            Camera.transform.LookAt(transform.position);
         }
+        
     }
-
-    private void OnTriggerEnter(Collider other)
+    public void OnCamMove(InputValue movement)
     {
-        if (other.gameObject.tag == "spline")
+        Vector2 movementVector = movement.Get<Vector2>();
+
+        if (movementVector.x > 0)
         {
-            spline = true;
+            camDirection = 1;
+        }
+        else if (movementVector.x < 0)
+        {
+            camDirection = -1;
+        }
+        else
+        {
+            camDirection = 0;
         }
     }
 }

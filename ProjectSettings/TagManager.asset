@@ -11,6 +11,7 @@ TagManager:
   - Collide
   - barrel
   - respawn
+  - spline
   layers:
   - Default
   - TransparentFX

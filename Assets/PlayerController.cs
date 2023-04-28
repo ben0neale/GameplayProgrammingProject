@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     public GameController controllerRef;
     public GameObject respawnPoint;
 
+    bool spline = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -166,6 +168,10 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.tag == "respawn")
         {
             transform.position = respawnPoint.transform.position;
+        }
+        if (other.gameObject.tag == "spline")
+        {
+            spline = true;
         }
         anim.SetBool("Jump", false);
         grounded = true;

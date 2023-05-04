@@ -33,11 +33,19 @@ public class PlayerController : MonoBehaviour
     bool forward1 = false;
     bool forward2 = false;
 
+    public int PlayerHealth = 5;
+
+    public GameObject hitbox;
 
     // Start is called before the first frame update
     void Start()
     {
         RB = GetComponent<Rigidbody>();
+    }
+
+    public void TakeDamage()
+    {
+        PlayerHealth -= 1;
     }
 
     public void OnMove(InputValue movementValue)
@@ -73,6 +81,7 @@ public class PlayerController : MonoBehaviour
     {
         if (controllerRef.state == GameController.Gamestate.play)
         {
+            StartCoroutine(attackTimer());
             anim.SetBool("ButtonPress", true);
             attacking = true;
             if (buttonCollide)
@@ -82,6 +91,15 @@ public class PlayerController : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
         }
+    }
+
+    IEnumerator attackTimer()
+    {
+        hitbox.SetActive(true);
+
+        yield return new WaitForSeconds(1);
+
+        hitbox.SetActive(false);
     }
     void Powerup()
     {

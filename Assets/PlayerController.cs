@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class PlayerController : MonoBehaviour
     bool doubleJump = false;
     float speedTimer = 10f;
     float jumpTimer = 10f;
-    float attackTime = .5f;
+    float attackTime = 1f;
     bool attacking = false;
     bool buttonCollide = false;
 
@@ -38,6 +39,17 @@ public class PlayerController : MonoBehaviour
     public GameObject hitbox;
     public GameObject camera;
     Vector3 startPos;
+
+    float attackCooldown = 1f;
+
+    int spawnNum = 1;
+
+    public GameObject spawnPoint1;
+    public GameObject spawnPoint2;
+    public GameObject spawnPoint3;
+    public GameObject spawnPoint4;
+
+    public TMP_Text healthText;
 
     // Start is called before the first frame update
     void Start()
@@ -82,7 +94,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnAttack()
     {
-        if (controllerRef.state == GameController.Gamestate.play)
+        if (controllerRef.state == GameController.Gamestate.play && !attacking)
         {
             StartCoroutine(attackTimer());
             anim.SetBool("ButtonPress", true);
@@ -94,6 +106,32 @@ public class PlayerController : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
         }
+    }
+
+    public void OnFire()
+    {
+        if (spawnNum == 1)
+        {
+            transform.position = spawnPoint1.transform.position;
+        }
+        if (spawnNum == 2)
+        {
+            transform.position = spawnPoint2.transform.position;
+        }
+        if (spawnNum == 3)
+        {
+            transform.position = spawnPoint3.transform.position;
+        }
+        if (spawnNum == 4)
+        {
+            transform.position = spawnPoint4.transform.position;
+        }
+        if (spawnNum < 4)
+        {
+            spawnNum++;
+        }
+        else
+            spawnNum = 1;
     }
 
     IEnumerator attackTimer()
@@ -137,6 +175,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frameS
     void FixedUpdate()
     {
+        if (PlayerHealth < 1)
+        {
+            PlayerHealth = 5;
+            transform.position = spawnPoint4.transform.position;
+        }
+        healthText.text = "Health: " + PlayerHealth.ToString();
         if (trigger1 && forward1)
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 45, 0), .2f);
@@ -184,7 +228,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                attackTime = .5f;
+                attackTime = 1f;
                 attacking = false;
                 anim.SetBool("ButtonPress", false);
             }

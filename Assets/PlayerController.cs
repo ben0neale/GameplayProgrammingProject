@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frameS
     void FixedUpdate()
     {
-        if (PlayerHealth < 1)
+        if (PlayerHealth < 1 || transform.position.y < -5)
         {
             PlayerHealth = 5;
             transform.position = spawnPoint4.transform.position;

@@ -16,15 +16,21 @@ public class EnemyController : MonoBehaviour
     Vector3 startingPos;
 
     public int Health = 3;
+    int startHealth;
     bool retreating = false;
 
     public PlayerController playerRef;
 
     Vector3 lookPos;
+    public GameObject hitbox;
+
+    public Rigidbody RB;
+    public GameObject SmallerEnemy;
 
     // Start is called before the first frame update
     void Start()
     {
+        startHealth = Health;
         playerRef = Player.GetComponent<PlayerController>();
         startingPos = transform.position;
         combatCollider.radius = combatRange;
@@ -34,6 +40,15 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Health <= 0)
+        {
+            if (startHealth > 1)
+            {
+                Instantiate(SmallerEnemy, transform.position + new Vector3(3, 1, 0), Quaternion.identity);
+                Instantiate(SmallerEnemy, transform.position + new Vector3(-3, 1, 0), Quaternion.identity);
+            }
+            Destroy(gameObject);
+        }
         lookPos.y = 0;
         Quaternion rotation = Quaternion.LookRotation(lookPos);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 3);
@@ -80,6 +95,7 @@ public class EnemyController : MonoBehaviour
     public void TakeDamage()
     {
         Health -= 1;
+        RB.AddRelativeForce(0, 200, -800);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -91,6 +107,7 @@ public class EnemyController : MonoBehaviour
         if (other.gameObject.tag == "hitbox")
         {
             TakeDamage();
+            hitbox.SetActive(false);
         }
     }
 

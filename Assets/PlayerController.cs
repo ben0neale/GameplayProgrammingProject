@@ -36,11 +36,14 @@ public class PlayerController : MonoBehaviour
     public int PlayerHealth = 5;
 
     public GameObject hitbox;
+    public GameObject camera;
+    Vector3 startPos;
 
     // Start is called before the first frame update
     void Start()
     {
         RB = GetComponent<Rigidbody>();
+        startPos = camera.transform.localPosition;
     }
 
     public void TakeDamage()
@@ -97,7 +100,7 @@ public class PlayerController : MonoBehaviour
     {
         hitbox.SetActive(true);
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(.1f);
 
         hitbox.SetActive(false);
     }
@@ -209,6 +212,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "Finish")
         {
             spline = false;
+            camera.transform.localPosition = startPos;
         }
     }
 
